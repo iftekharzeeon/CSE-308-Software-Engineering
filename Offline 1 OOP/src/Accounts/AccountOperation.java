@@ -18,7 +18,7 @@ public class AccountOperation {
         } else {
             switch (accountType) {
                 case "Student":
-                    Accounts studentAccount = new StudentAccount();
+                    Accounts studentAccount = new StudentAccount(accountName, amount, accountType, Bank.maximumAllowableLoanRequest.get(accountType));
                     if (studentAccount.createAccount(accountName, amount)) {
                         Bank.personList.put(accountName, studentAccount);
                         this.activeUser = accountName;
@@ -29,7 +29,7 @@ public class AccountOperation {
                     break;
 
                 case "Loan":
-                    Accounts loanAccount = new LoanAccount();
+                    Accounts loanAccount = new LoanAccount(accountName, amount, accountType, Bank.maximumAllowableLoanRequest.get(accountType));
                     if (loanAccount.createAccount(accountName, amount)) {
                         Bank.personList.put(accountName, loanAccount);
                         this.activeUser = accountName;
@@ -39,8 +39,8 @@ public class AccountOperation {
                     }
                     break;
 
-                case "Fixed Deposit":
-                    Accounts fixedDepAccount = new FixedDeposit();
+                case "Fixed-Deposit":
+                    Accounts fixedDepAccount = new FixedDeposit(accountName, amount, accountType, Bank.maximumAllowableLoanRequest.get(accountType));
                     if (fixedDepAccount.createAccount(accountName, amount)) {
                         Bank.personList.put(accountName, fixedDepAccount);
                         this.activeUser = accountName;
@@ -52,7 +52,7 @@ public class AccountOperation {
                     break;
 
                 case "Savings":
-                    Accounts savingAccount = new SavingsAccount();
+                    Accounts savingAccount = new SavingsAccount(accountName, amount, accountType, Bank.maximumAllowableLoanRequest.get(accountType));
                     if (savingAccount.createAccount(accountName, amount)) {
                         Bank.personList.put(accountName, savingAccount);
                         this.activeUser = accountName;
@@ -60,6 +60,8 @@ public class AccountOperation {
                     } else {
                         System.out.println("Error creating the account.");
                     }
+                default:
+                    System.out.println("Invalid account type.");
             }
         }
     }
@@ -109,10 +111,17 @@ public class AccountOperation {
         for (Object object :  Bank.personList.values()) {
             if (object instanceof Accounts) {
                 Accounts account = (Accounts) object;
-                Double interestRate = Bank.accountsInterest.get(account.accountType);
-                double changedAmount = account.depositedAmount * interestRate - (account.loanAmount * Bank.loanInterestRate + Bank.serviceCharge);
-                account.depositedAmount += changedAmount;
-                Bank.getInstance().increaseInternalFund(changedAmount);
+                if (object instanceof LoanAccount) {
+                    double changedAmount = account.getLoanAmount() * Bank.loanInterestRate;
+                    account.setLoanAmount(account.getLoanAmount() + changedAmount);
+                    Bank.getInstance().increaseInternalFund(changedAmount);
+                } else {
+                    Double interestRate = Bank.accountsInterest.get(account.getAccountType());
+                    double changedAmount = account.getDepositedAmount() * interestRate - (account.getLoanAmount() * Bank.loanInterestRate + Bank.serviceCharge);
+                    account.setDepositedAmount(account.getDepositedAmount() + changedAmount);
+                    Bank.getInstance().increaseInternalFund(changedAmount);
+                }
+                account.increaseMaturityYear();
             }
         }
         System.out.println("1 year passed");
@@ -125,6 +134,7 @@ public class AccountOperation {
 
     public void changeRate(String accountType, double newRate) {
         Bank.accountsInterest.put(accountType, newRate);
+        System.out.println("Interest rate changed for " + accountType + ". New rate " + newRate + "%");
     }
 
     public boolean isLoanRequestActive() {
@@ -136,16 +146,16 @@ public class AccountOperation {
         for (Object object : Bank.personList.values()) {
             if (object instanceof Accounts) {
                 Accounts account = (Accounts) object;
-                if (account.requestLoanAmount > 0) {
-                    account.loanAmount += account.requestLoanAmount;
-                    account.depositedAmount += account.loanAmount;
-                    Bank.getInstance().decreaseInternalFund(account.requestLoanAmount);
-                    account.requestLoanAmount = 0;
+                if (account.getRequestLoanAmount() > 0) {
+                    account.setLoanAmount(account.getLoanAmount() + account.getRequestLoanAmount());
+                    account.setDepositedAmount(account.getDepositedAmount() + account.getLoanAmount());
+                    Bank.getInstance().decreaseInternalFund(account.getRequestLoanAmount());
+                    account.setRequestLoanAmount(0);
                     accountsName.append(account.getName()).append(" ");
                 }
             }
         }
-        System.out.println("Loan for " + accountsName + " approved");
+        System.out.println("Loan for " + accountsName + "approved");
     }
 
 }

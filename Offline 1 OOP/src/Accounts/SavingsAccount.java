@@ -2,14 +2,17 @@ package Accounts;
 
 public class SavingsAccount extends Accounts {
 
-    public SavingsAccount() {
-        this.accountType = "Savings";
+    private final double minimumBankAmount;
+
+    public SavingsAccount(String accountName, double amount, String accountType, Double maximumLoanRequest) {
+
+        super(accountName, amount, 0, 0, accountType, maximumLoanRequest);
+
+        minimumBankAmount = 1000;
     }
 
     @Override
     protected boolean createAccount(String name, double amount) {
-        this.name = name;
-        this.depositedAmount = amount;
 
         System.out.println("Savings account for " + name + " created; initial balance " + amount + "$");
 
@@ -18,40 +21,25 @@ public class SavingsAccount extends Accounts {
 
     @Override
     protected boolean deposit(double amount) {
-        this.depositedAmount += amount;
-        System.out.println(amount + "$ deposited, current balance " + this.depositedAmount + "$");
+        double newAmount = this.getDepositedAmount() + amount;
+        this.setDepositedAmount(newAmount);
+        System.out.println(amount + "$ deposited, current balance " + this.getDepositedAmount() + "$");
         return true;
     }
 
     @Override
-    protected boolean requestLoan(double amount) {
-        if (amount <= 10000) {
-            if ((amount + this.requestLoanAmount + this.loanAmount) <= 10000) {
-                this.requestLoanAmount += amount;
-                return true;
-            } else {
-                //Not allowed
-                return false;
-            }
-        } else {
-            //Not allowed
-            return false;
-        }
-    }
-
-    @Override
     protected boolean withdraw(double amount) {
-        if (this.depositedAmount < amount) {
+        if (this.getDepositedAmount() < amount) {
             //Not enough money remaining
-            System.out.println("Invalid transaction; current balance " + this.depositedAmount + "$");
+            System.out.println("Invalid transaction; current balance " + this.getDepositedAmount() + "$");
             return false;
         } else {
-            if ((this.depositedAmount - amount) < 1000) {
-                System.out.println("Invalid transaction; can not remain less than 1000; current balance " + this.depositedAmount + "$");
+            if ((this.getDepositedAmount() - amount) < minimumBankAmount) {
+                System.out.println("Invalid transaction; can not remain less than 1,000$; current balance " + this.getDepositedAmount() + "$");
                 return false;
             } else {
-                this.depositedAmount -= amount;
-                System.out.println(this.depositedAmount + "$ withdrawn successfully, current balance " + this.depositedAmount + "$");
+                this.setDepositedAmount(this.getDepositedAmount() - amount);
+                System.out.println(amount + "$ withdrawn successfully, current balance " + this.getDepositedAmount() + "$");
                 return true;
             }
         }

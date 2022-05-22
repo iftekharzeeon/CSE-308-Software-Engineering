@@ -1,20 +1,21 @@
 package Accounts;
 
-import Bank.Bank;
-
 public class FixedDeposit extends Accounts {
 
+    private final double minimumDepositAmount;
+    private final double minimumCreatingAmount;
 
-    public FixedDeposit() {
-        this.accountType = "Fixed Deposit";
+    public FixedDeposit(String accountName, double amount, String accountType, Double maximumLoanRequest) {
+        super(accountName, amount, 0, 0, accountType, maximumLoanRequest);
+
+        minimumCreatingAmount = 100000;
+        minimumDepositAmount = 50000;
     }
 
     @Override
     protected boolean createAccount(String name, double amount) {
 
-        if (amount >= 100000) {
-            this.name = name;
-            this.depositedAmount = amount;
+        if (amount >= minimumCreatingAmount) {
 
             System.out.println("Fixed Deposit account for " + name + " created; initial balance " + amount + "$");
 
@@ -26,45 +27,30 @@ public class FixedDeposit extends Accounts {
 
     @Override
     protected boolean deposit(double amount) {
-        if (amount >= 50000) {
-            this.name += amount;
-            System.out.println(amount + "$ deposited, current balance " + this.depositedAmount + "$");
-
+        if (amount >= minimumDepositAmount) {
+            double newAmount = this.getDepositedAmount() + amount;
+            this.setDepositedAmount(newAmount);
+            System.out.println(amount + "$ deposited, current balance " + this.getDepositedAmount() + "$");
             return true;
         }
+        System.out.println("Invalid transaction. Minimum amount to deposit is " + minimumDepositAmount + "$");
         return false;
     }
 
     @Override
-    protected boolean requestLoan(double amount) {
-        if (amount <= 100000) {
-            if ((amount + this.requestLoanAmount + this.loanAmount) <= 100000) {
-                this.requestLoanAmount += amount;
-                return true;
-            } else {
-                //Not allowed
-                return false;
-            }
-        } else {
-            //Not allowed
-            return false;
-        }
-    }
-
-    @Override
     protected boolean withdraw(double amount) {
-        if (Bank.clockYear >= 1) {
-            if (this.depositedAmount < amount) {
+        if (this.getMaturityYear() >= 1) {
+            if (this.getDepositedAmount() < amount) {
                 //Not enough money remaining
-                System.out.println("Invalid transaction; current balance " + this.depositedAmount + "$");
+                System.out.println("Invalid transaction; current balance " + this.getDepositedAmount() + "$");
                 return false;
             } else {
-                this.depositedAmount -= amount;
-                System.out.println(this.depositedAmount + "$ withdrawn successfully, current balance " + this.depositedAmount + "$");
+                this.setDepositedAmount(this.getDepositedAmount() - amount);
+                System.out.println(amount + "$ withdrawn successfully, current balance " + this.getDepositedAmount() + "$");
                 return true;
             }
         } else {
-            System.out.println("Invalid transaction. The account is not matured yet.");
+            System.out.println("Invalid transaction. The account is not matured yet. Current Balance " + this.getDepositedAmount());
             return false;
         }
     }

@@ -2,45 +2,54 @@ package Accounts;
 
 public class LoanAccount extends Accounts {
 
-    public LoanAccount() {
-        this.accountType = "Loan";
+    public LoanAccount(String accountName, double loanAmount, String accountType, Double maximumLoanRequest) {
+        super(accountName, 0, loanAmount, 0, accountType, maximumLoanRequest);
     }
 
     @Override
     protected boolean createAccount(String name, double amount) {
-        this.name = name;
-        this.loanAmount = amount;
 
-        System.out.println("Student account for " + name + " created; initial loan " + amount + "$");
+        System.out.println("Loan account for " + name + " created; initial loan " + amount + "$");
 
         return true;
     }
 
     @Override
     protected boolean deposit(double amount) {
-        if (this.depositedAmount < amount) {
+        if (this.getLoanAmount() < amount) {
             //Loan amount is lesser
-            return false;
+            double returnAmount = amount - this.getLoanAmount();
+            this.setLoanAmount(0);
+            System.out.println("Your loan fully repaid. Current loan amount " + this.getLoanAmount() + "$. " + returnAmount + "$ is returned.");
+            return true;
         } else {
-            this.depositedAmount -= amount;
+            double newAmount = this.getLoanAmount() - amount;
+            this.setDepositedAmount(newAmount);
+            System.out.println("You have repaid " + amount + "$. Current loan amount " + this.getLoanAmount());
             return true;
         }
     }
 
     @Override
     protected boolean requestLoan(double amount) {
-        if (this.loanAmount * 0.05 >= (amount + this.requestLoanAmount)) {
-            this.requestLoanAmount += amount;
-            System.out.println("Loan request successful, sent for approval.");
-            return true;
-        } else {
-            return false;
+        if (this.getRequestLoanAmount() == 0) {
+            if (this.getLoanAmount() * this.getMaximumLoanRequest() >= amount) {
+                this.setRequestLoanAmount(amount);
+                return true;
+            }
         }
+        //Not allowed
+        return false;
     }
 
     @Override
     protected boolean withdraw(double amount) {
         System.out.println("Invalid transaction. This is a loan account.");
         return false;
+    }
+
+    @Override
+    protected void query() {
+        System.out.println("Current loan amount " + this.getLoanAmount() + "$");
     }
 }

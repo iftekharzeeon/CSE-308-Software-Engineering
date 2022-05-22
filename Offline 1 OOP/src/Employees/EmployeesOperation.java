@@ -26,7 +26,7 @@ public class EmployeesOperation {
         Bank.personList.put("C4", c4);
         Bank.personList.put("C5", c5);
 
-        System.out.println("Original.Bank Created; MD, S1, S2, C1, C2, C3, C4, C5 created");
+        System.out.println("Bank Created; MD, S1, S2, C1, C2, C3, C4, C5 created");
     }
 
     public void transactionOpen(String name, AccountOperation accountOperation) {
@@ -55,8 +55,12 @@ public class EmployeesOperation {
     }
 
     public void changeRate(String accountType, double newRate, AccountOperation accountOperation) {
-        Employees employee = (Employees) Bank.personList.get(activeEmployee);
-        employee.changeInterestRate(accountType, newRate, accountOperation);
+        if (accountType.equals("Loan")) {
+            System.out.println("Invalid transaction. No interest rate for loan account");
+        } else {
+            Employees employee = (Employees) Bank.personList.get(activeEmployee);
+            employee.changeInterestRate(accountType, newRate, accountOperation);
+        }
     }
 
     public void approveLoan(AccountOperation accountOperation) {

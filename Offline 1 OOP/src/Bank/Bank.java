@@ -12,15 +12,17 @@ public class Bank {
     private static Bank bank = null;
 
     private static boolean isTransactionOpen;
+
     private final AccountOperation accountOperation;
     private final EmployeesOperation employeesOperation;
-    private double internalFund;
-
     public static HashMap<String, Object> personList;
+    public static HashMap<String, Double> accountsInterest;
+    public static HashMap<String, Double> maximumAllowableLoanRequest;
+
     public static int clockYear = 0;
     public static double loanInterestRate;
     public static double serviceCharge;
-    public static HashMap<String, Double> accountsInterest;
+    private double internalFund;
 
     private Bank() {
 
@@ -31,16 +33,29 @@ public class Bank {
 
         personList = new HashMap<>();
         accountsInterest = new HashMap<>();
+        maximumAllowableLoanRequest = new HashMap<>();
 
         accountOperation = new AccountOperation();
         employeesOperation = new EmployeesOperation();
 
         double savingsInterestRate = 0.1;
-        accountsInterest.put("Savings", savingsInterestRate);
         double studentInterestRate = 0.05;
-        accountsInterest.put("Student", studentInterestRate);
         double fixedDepositInterestRate = 0.15;
-        accountsInterest.put("Fixed Deposit", fixedDepositInterestRate);
+
+        double studentMaximumLoanRequest = 1000;
+        double savingsMaximumLoanRequest = 10000;
+        double fixedDepositMaximumLoanRequest = 100000;
+        double loanMaximumLoanRequestRate = 0.05;
+
+        accountsInterest.put("Savings", savingsInterestRate);
+        accountsInterest.put("Student", studentInterestRate);
+        accountsInterest.put("Fixed-Deposit", fixedDepositInterestRate);
+
+        maximumAllowableLoanRequest.put("Savings", savingsMaximumLoanRequest);
+        maximumAllowableLoanRequest.put("Student", studentMaximumLoanRequest);
+        maximumAllowableLoanRequest.put("Fixed-Deposit", fixedDepositMaximumLoanRequest);
+        maximumAllowableLoanRequest.put("Loan", loanMaximumLoanRequestRate);
+
     }
 
     public static Bank getInstance() {
@@ -48,140 +63,142 @@ public class Bank {
         return bank;
     }
 
-    public static void run() {
-        bank = new Bank();
+    public static void open() {
+        if (bank == null) {
+            bank = new Bank();
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your command.");
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter your command.");
 
-        while (true) {
-            String inputLine = scanner.nextLine();
-            String[] input = inputLine.split(" ");
+            while (true) {
+                String inputLine = scanner.nextLine();
+                String[] input = inputLine.split(" ");
 
-            if (input[0].equalsIgnoreCase("Create")) {
-                if (isTransactionOpen) {
-                    //One transaction is still open
-                    System.out.println("Invalid request. One transaction is still open.");
+                if (input[0].equalsIgnoreCase("Create")) {
+                    if (isTransactionOpen) {
+                        //One transaction is still open
+                        System.out.println("Invalid request. One transaction is still open.");
 
-                } else {
-                    isTransactionOpen = true;
+                    } else {
+                        isTransactionOpen = true;
 
-                    String accountName = input[1];
-                    String accountType = input[2];
-                    double amount = Double.parseDouble(input[3]);
+                        String accountName = input[1];
+                        String accountType = input[2];
+                        double amount = Double.parseDouble(input[3]);
 
-                    bank.createAccount(accountName, amount, accountType);
+                        bank.createAccount(accountName, amount, accountType);
+                    }
+                } else if(input[0].equalsIgnoreCase("Deposit")) {
+                    if (isTransactionOpen) {
+
+                        double amount = Double.parseDouble(input[1]);
+
+                        bank.deposit(amount);
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+                } else if (input[0].equalsIgnoreCase("Withdraw")) {
+                    if (isTransactionOpen) {
+
+                        double amount = Double.parseDouble(input[1]);
+
+                        bank.withdraw(amount);
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+                } else if (input[0].equalsIgnoreCase("Query")) {
+                    if (isTransactionOpen) {
+
+                        bank.query();
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+                } else if (input[0].equalsIgnoreCase("Close")) {
+                    if (isTransactionOpen) {
+
+                        bank.close();
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+                } else if (input[0].equalsIgnoreCase("Request")) {
+                    if (isTransactionOpen) {
+
+                        double amount = Double.parseDouble(input[1]);
+
+                        bank.requestLoan(amount);
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+                } else if (input[0].equalsIgnoreCase("Open")) {
+                    if (isTransactionOpen) {
+                        //A Transaction is open
+                        System.out.println("Invalid request. One transaction is still open.");
+                    } else {
+                        String name = input[1];
+                        bank.openTransaction(name);
+                    }
+                } else if (input[0].equalsIgnoreCase("Lookup")) {
+                    if (isTransactionOpen) {
+
+                        String accountName = input[1];
+
+                        bank.lookup(accountName);
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+                } else if (input[0].equalsIgnoreCase("See")) {
+                    if (isTransactionOpen) {
+
+                        bank.see();
+
+                    } else {
+                        //Transaction is closed now
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+
+                } else if (input[0].equalsIgnoreCase("Change")) {
+                    if (isTransactionOpen) {
+                        String accountType = input[1];
+                        double newInterestRate = Double.parseDouble(input[2]);
+
+                        bank.changeRate(accountType, newInterestRate);
+                    } else {
+                        //Transaction is closed
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+
+                } else if (input[0].equalsIgnoreCase("Approve")) {
+                    if (isTransactionOpen) {
+
+                        bank.approveLoan();
+                    } else {
+                        //Transaction is closed
+                        System.out.println("Invalid request. No transaction is open now.");
+                    }
+
+                } else if (input[0].equalsIgnoreCase("INC")) {
+                    if (isTransactionOpen) {
+                        //Transaction is open now
+                        System.out.println("Invalid request. One transaction is still open.");
+                    } else {
+                        bank.increaseYear();
+                    }
+                } else if (input[0].equalsIgnoreCase("Exit")) {
+                    System.out.println("Bank Closed");
+                    break;
                 }
-            } else if(input[0].equalsIgnoreCase("Deposit")) {
-                if (isTransactionOpen) {
-
-                    double amount = Double.parseDouble(input[1]);
-
-                    bank.deposit(amount);
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-            } else if (input[0].equalsIgnoreCase("Withdraw")) {
-                if (isTransactionOpen) {
-
-                    double amount = Double.parseDouble(input[1]);
-
-                    bank.withdraw(amount);
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-            } else if (input[0].equalsIgnoreCase("Query")) {
-                if (isTransactionOpen) {
-
-                    bank.query();
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-            } else if (input[0].equalsIgnoreCase("Close")) {
-                if (isTransactionOpen) {
-
-                    bank.close();
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-            } else if (input[0].equalsIgnoreCase("Request")) {
-                if (isTransactionOpen) {
-
-                    double amount = Double.parseDouble(input[1]);
-
-                    bank.requestLoan(amount);
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-            } else if (input[0].equalsIgnoreCase("Open")) {
-                if (isTransactionOpen) {
-                    //A Transaction is open
-                    System.out.println("Invalid request. One transaction is still open.");
-                } else {
-                    String name = input[1];
-                    bank.openTransaction(name);
-                }
-            } else if (input[0].equalsIgnoreCase("Lookup")) {
-                if (isTransactionOpen) {
-
-                    String accountName = input[1];
-
-                    bank.lookup(accountName);
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-            } else if (input[0].equalsIgnoreCase("See")) {
-                if (isTransactionOpen) {
-
-                    bank.see();
-
-                } else {
-                    //Transaction is closed now
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-
-            } else if (input[0].equalsIgnoreCase("Change")) {
-                if (isTransactionOpen) {
-                    String accountType = input[1];
-                    double newInterestRate = Double.parseDouble(input[2]);
-
-                    bank.changeRate(accountType, newInterestRate);
-                } else {
-                    //Transaction is closed
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-
-            } else if (input[0].equalsIgnoreCase("Approve")) {
-                if (isTransactionOpen) {
-
-                    bank.approveLoan();
-                } else {
-                    //Transaction is closed
-                    System.out.println("Invalid request. No transaction is open now.");
-                }
-
-            } else if (input[0].equalsIgnoreCase("INC")) {
-                if (isTransactionOpen) {
-                    //Transaction is open now
-                    System.out.println("Invalid request. One transaction is still open.");
-                } else {
-                    bank.increaseYear();
-                }
-            } else if (input[0].equalsIgnoreCase("Exit")) {
-                System.out.println("Bank Closed");
-                break;
             }
         }
     }
@@ -258,7 +275,7 @@ public class Bank {
         this.internalFund -= amount;
     }
 
-    public void approveLoan() {
+    private void approveLoan() {
         employeesOperation.approveLoan(accountOperation);
     }
 }

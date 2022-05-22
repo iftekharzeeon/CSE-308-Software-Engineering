@@ -22,6 +22,6 @@ public class Officer implements Employees{
 
     @Override
     public void see() {
-        System.out.println("You don't have permission for this operation.");
+        System.out.println("You don't have permission for this operation");
     }
 }
