@@ -24,7 +24,7 @@ public class LoanAccount extends Accounts {
             return true;
         } else {
             double newAmount = this.getLoanAmount() - amount;
-            this.setDepositedAmount(newAmount);
+            this.setLoanAmount(newAmount);
             System.out.println("You have repaid " + amount + "$. Current loan amount " + this.getLoanAmount());
             return true;
         }
