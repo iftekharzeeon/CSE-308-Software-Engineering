@@ -6,9 +6,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Enter the file name (with extension) name to open");
         String inputFileName = scanner.nextLine();
-
-        String fileExtension = inputFileName.split("\\.")[inputFileName.split("\\.").length - 1];
-        System.out.println(fileExtension);
+        CodeEditor.open(inputFileName);
     }
 }
