@@ -1,6 +1,8 @@
 package problem_1.display;
 
-public abstract class Display {
-    protected abstract String name();
-    protected abstract double price();
+import problem_1.components.Component;
+
+public abstract class Display implements Component {
+    public abstract String name();
+    public abstract double price();
 }

@@ -1,6 +1,10 @@
 package problem_1.processor;
 
-public abstract class Processor {
-    protected abstract String name();
-    protected abstract double price();
+import problem_1.components.Component;
+
+public abstract class Processor implements Component {
+    @Override
+    public abstract String name();
+    @Override
+    public abstract double price();
 }

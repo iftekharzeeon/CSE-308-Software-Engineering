@@ -2,12 +2,12 @@ package problem_1.communicationsystem;
 
 public class WiFi extends CommunicationSystem {
     @Override
-    protected String name() {
+    public String name() {
         return "WiFi Module";
     }
 
     @Override
-    protected double price() {
+    public double price() {
         return 500;
     }
 }

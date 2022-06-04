@@ -1,14 +1,13 @@
 package problem_1.communicationsystem;
 
-public abstract class MobileNetwork extends CommunicationSystem{
-
+public class Robi extends MobileNetwork{
     @Override
     public String name() {
-        return null;
+        return "Robi SIM";
     }
 
     @Override
     public double price() {
-        return 0;
+        return 150;
     }
 }

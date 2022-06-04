@@ -3,12 +3,12 @@ package problem_1.display;
 
 public class LED extends Display {
     @Override
-    protected String name() {
+    public String name() {
         return "LED Matrix";
     }
 
     @Override
-    protected double price() {
+    public double price() {
         return 2500;
     }
 }

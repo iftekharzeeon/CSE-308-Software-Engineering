@@ -3,12 +3,12 @@ package problem_1.display;
 
 public class LCD extends Display {
     @Override
-    protected String name() {
+    public String name() {
         return "LCD Panel";
     }
 
     @Override
-    protected double price() {
+    public double price() {
         return 4000;
     }
 }

@@ -8,7 +8,7 @@ public class ArduinoMega extends Processor {
     }
 
     @Override
-    protected double price() {
+    public double price() {
         return 5000;
     }
 }

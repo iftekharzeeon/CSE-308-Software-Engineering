@@ -3,12 +3,12 @@ package problem_1.processor;
 public class ATMega32 extends Processor {
 
     @Override
-    protected String name() {
+    public String name() {
         return "ATMega32";
     }
 
     @Override
-    protected double price() {
+    public double price() {
         return 2000;
     }
 }
