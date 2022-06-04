@@ -1,6 +1,6 @@
 package problem_1.controlunit;
 
-import problem_1.components.Component;
+import problem_1.Component;
 
 public class ControlUnit implements Component {
 

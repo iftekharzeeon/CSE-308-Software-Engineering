@@ -1,6 +1,6 @@
 package problem_1.application;
 
-import problem_1.components.Component;
+import problem_1.Component;
 
 public class Application implements Component {
     private String systemName;

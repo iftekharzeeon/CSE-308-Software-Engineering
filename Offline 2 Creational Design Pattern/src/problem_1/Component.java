@@ -1,4 +1,4 @@
-package problem_1.components;
+package problem_1;
 
 public interface Component {
     String name();

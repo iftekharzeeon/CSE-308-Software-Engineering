@@ -32,9 +32,13 @@ public class CodeEditor {
 
     }
 
-    private static void loadSetting() {
-        System.out.println("Language Detected: " + language.languageName());
-        System.out.println("Font selected for the language: " + language.languageFont().fontName());
-        language.languageParser().parse();
+    public static void loadSetting() {
+        if (language != null) {
+            System.out.println("Language Detected: " + language.languageName());
+            System.out.println("Font selected for the language: " + language.languageFont().fontName());
+            language.languageParser().parse();
+        } else {
+            System.out.println("No file opened yet");
+        }
     }
 }

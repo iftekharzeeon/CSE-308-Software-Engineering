@@ -3,7 +3,7 @@ package problem_1.communicationsystem;
 public class GrameenPhone extends MobileNetwork{
     @Override
     public String name() {
-        return "Grameen Phone SIM";
+        return "Mobile Network: GrameenPhone";
     }
 
     @Override

@@ -16,8 +16,8 @@ public class SystemBuilder {
         system = SystemFactory.getSystem(systemName);
 
         CommunicationSystem communicationSystem = CommunicationSystemFactory.getCommunicationSystem(comChannel);
-        Application application = new Application(systemName);
-        ControlUnit controlUnit = new ControlUnit(systemName);
+        Application application = new Application(system.toString());
+        ControlUnit controlUnit = new ControlUnit(system.toString());
 
         system.addComponent(communicationSystem);
         system.addComponent(application);

@@ -4,7 +4,7 @@ public class Banglalink extends MobileNetwork{
 
     @Override
     public String name() {
-        return "Banglalink Sim";
+        return "Mobile Network: Banglalink";
     }
 
     @Override
