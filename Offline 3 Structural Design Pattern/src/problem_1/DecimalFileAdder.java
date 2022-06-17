@@ -24,14 +24,14 @@ public class DecimalFileAdder implements DecimalAdder{
             fileReader.read(chars);
             fileText = new String(chars);
 
-            if (fileText.indexOf(' ') >= 0 && fileText.indexOf('~') < 0) {
+            if (fileText.indexOf(' ') >= 0) {
                 double[] doubleValues = Arrays.stream(fileText.split(" "))
                                         .mapToDouble(Double::parseDouble)
                                         .toArray();
 
                 System.out.println("Sum of the decimal numbers is: " + Arrays.stream(doubleValues).sum());
 
-            } else if (fileText.indexOf('~') >= 0 && fileText.indexOf(' ') < 0) {
+            } else if (fileText.indexOf('~') >= 0) {
                 fileAdapter = new FileAdapter();
                 fileAdapter.calculateSum(inputFile);
             } else {
@@ -40,6 +40,7 @@ public class DecimalFileAdder implements DecimalAdder{
             }
 
         } catch (Exception e) {
+            System.out.println("File format not supported");
             System.out.println(e);
         }
     }
