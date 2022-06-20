@@ -3,7 +3,6 @@ package problem_2;
 import problem_2.appetizers.FrenchFries;
 import problem_2.appetizers.OnionRings;
 import problem_2.burgers.BeefBurger;
-import problem_2.burgers.MealItem;
 import problem_2.burgers.VeggiBurger;
 import problem_2.drinks.Coffee;
 import problem_2.drinks.Coke;
@@ -18,11 +17,12 @@ public class Main {
 
         MealItem mealItem = null;
 
-        int numberOfWater = 0;
-        int numberOfCoke = 0;
-        int numberOfCoffee = 0;
+        int numberOfWater;
+        int numberOfCoke;
+        int numberOfCoffee;
 
         boolean showMenu = true;
+        double totalBill = 0;
 
         while (showMenu) {
             menu();
@@ -32,7 +32,7 @@ public class Main {
                 case "1":
                     mealItem = new BeefBurger();
                     mealItem = new FrenchFries(mealItem);
-                    showMenu = false;
+                    mealItem = new Cheese(mealItem);
                     break;
                 case "2":
                     System.out.println("Enter the number of Water you want: ");
@@ -40,7 +40,6 @@ public class Main {
                     mealItem = new VeggiBurger();
                     mealItem = new OnionRings(mealItem);
                     mealItem = new Water(mealItem, numberOfWater);
-                    showMenu = false;
                     break;
                 case "3":
                     System.out.println("Enter the number of Coke you want: ");
@@ -49,7 +48,6 @@ public class Main {
                     mealItem = new OnionRings(mealItem);
                     mealItem = new FrenchFries(mealItem);
                     mealItem = new Coke(mealItem, numberOfCoke);
-                    showMenu = false;
                     break;
                 case "4":
                     System.out.println("Enter the number of Coffee you want: ");
@@ -61,19 +59,27 @@ public class Main {
                     mealItem = new OnionRings(mealItem);
                     mealItem = new Coffee(mealItem, numberOfCoffee);
                     mealItem = new Water(mealItem, numberOfWater);
-                    showMenu = false;
                     break;
                 case "5":
                     mealItem = new BeefBurger();
-                    showMenu = false;
                     break;
                 default:
                     System.out.println("Sorry, we are only selling the following meals for now");
             }
-        }
+            System.out.print("Your meal consists of\n" + mealItem.mealType());
+            System.out.println("Meal price => " + mealItem.mealPrice());
+            totalBill += mealItem.mealPrice();
 
-        System.out.println("Your meal consists of\n" + mealItem.mealType());
-        System.out.println("Total Bill => " + mealItem.mealPrice());
+            System.out.println("Do you want to order more? [y/n]");
+
+            input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("n")) {
+                showMenu = false;
+                System.out.println("Thank you for your order.");
+            }
+        }
+        System.out.println("Total bill => " + totalBill);
 
     }
 

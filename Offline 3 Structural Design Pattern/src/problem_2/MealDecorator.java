@@ -1,7 +1,5 @@
 package problem_2;
 
-import problem_2.burgers.MealItem;
-
 public abstract class MealDecorator implements MealItem {
     private MealItem newMealItem;
 

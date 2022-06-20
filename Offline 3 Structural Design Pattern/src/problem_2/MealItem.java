@@ -1,4 +1,4 @@
-package problem_2.burgers;
+package problem_2;
 
 public interface MealItem {
     String mealType();

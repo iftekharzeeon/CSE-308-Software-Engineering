@@ -1,7 +1,7 @@
 package problem_2.appetizers;
 
 import problem_2.MealDecorator;
-import problem_2.burgers.MealItem;
+import problem_2.MealItem;
 
 public class OnionRings extends MealDecorator {
 

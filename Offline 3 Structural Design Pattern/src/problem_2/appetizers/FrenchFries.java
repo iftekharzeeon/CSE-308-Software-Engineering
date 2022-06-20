@@ -1,11 +1,11 @@
 package problem_2.appetizers;
 
 import problem_2.MealDecorator;
-import problem_2.burgers.MealItem;
+import problem_2.MealItem;
 
 public class FrenchFries extends MealDecorator {
 
-    private final int price = 100;
+    private final int price = 90;
 
     public FrenchFries(MealItem newMealItem) {
         super(newMealItem);

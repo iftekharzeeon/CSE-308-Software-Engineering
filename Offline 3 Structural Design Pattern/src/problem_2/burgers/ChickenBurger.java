@@ -1,5 +1,7 @@
 package problem_2.burgers;
 
+import problem_2.MealItem;
+
 public class ChickenBurger implements MealItem {
 
     private final int price = 160;
